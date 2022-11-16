@@ -1,23 +1,26 @@
+import { InputHandler } from './InputHandler';
 import { Player } from './Player';
 
 export class Game {
     width: number;
     height: number;
-    context: CanvasRenderingContext2D;
     player: Player;
+    input: InputHandler;
+    keys: string[];
 
-    constructor(width: number, height: number, context: CanvasRenderingContext2D) {
+    constructor(width: number, height: number) {
         this.width = width;
         this.height = height;
-        this.context = context;
         this.player = new Player(this);
+        this.input = new InputHandler(this);
+        this.keys = [];
     }
 
     update() {
         this.player.update();
     }
 
-    draw() {
-        this.player.draw(this.context);
+    draw(context: CanvasRenderingContext2D) {
+        this.player.draw(context);
     }
 }

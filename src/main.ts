@@ -15,5 +15,14 @@ window.addEventListener('load', function () {
     canvas.width = 500;
     canvas.height = 500;
 
-    const game = new Game(canvas.width, canvas.height, ctx);
+    const game = new Game(canvas.width, canvas.height);
+
+    // animation loop
+    function animate(timestamp: number) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        game.update();
+        game.draw(ctx);
+        requestAnimationFrame(animate);
+    }
+    animate(0);
 });
