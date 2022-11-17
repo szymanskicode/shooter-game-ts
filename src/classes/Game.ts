@@ -7,6 +7,7 @@ export class Game {
     player: Player;
     input: InputHandler;
     keys: string[];
+    ammo: number;
 
     constructor(width: number, height: number) {
         this.width = width;
@@ -14,6 +15,7 @@ export class Game {
         this.player = new Player(this);
         this.input = new InputHandler(this);
         this.keys = [];
+        this.ammo = 20;
     }
 
     update() {
