@@ -8,12 +8,16 @@ export class Enemy {
     height: number;
     speedX: number;
     markedForDeletion: boolean;
+    lives: number;
+    score: number;
 
     constructor(game: Game) {
         this.game = game;
         this.x = this.game.width;
         this.speedX = Math.random() * -1.5 - 0.5;
         this.markedForDeletion = false;
+        this.lives = 5;
+        this.score = this.lives;
     }
 
     update() {
@@ -24,6 +28,9 @@ export class Enemy {
     draw(context: CanvasRenderingContext2D) {
         context.fillStyle = 'red';
         context.fillRect(this.x, this.y, this.width, this.height);
+        context.fillStyle = 'black';
+        context.font = '20px Halvetica';
+        context.fillText(this.lives.toString(), this.x, this.y);
     }
 }
 

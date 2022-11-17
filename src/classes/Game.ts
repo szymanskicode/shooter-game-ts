@@ -2,6 +2,9 @@ import { InputHandler } from './InputHandler';
 import { Player } from './Player';
 import { UI } from './UI';
 import { Angler1, Enemy } from './Enemy';
+import { Projectile } from './Projectile';
+
+type Rect = Player | Enemy | Projectile;
 
 export class Game {
     width: number;
@@ -17,6 +20,7 @@ export class Game {
     maxAmmo: number;
     ammoTimer: number;
     ammoInterval: number;
+    score: number;
     gameOver: boolean;
 
     constructor(width: number, height: number) {
@@ -33,6 +37,7 @@ export class Game {
         this.maxAmmo = 50;
         this.ammoTimer = 0;
         this.ammoInterval = 500;
+        this.score = 0;
         this.gameOver = false;
     }
 
@@ -49,6 +54,21 @@ export class Game {
 
         this.enemies.forEach((enemy) => {
             enemy.update();
+
+            // collisions
+            if (this.checkCollision(this.player, enemy)) {
+                enemy.markedForDeletion = true;
+            }
+            this.player.projectiles.forEach((projectile) => {
+                if (this.checkCollision(projectile, enemy)) {
+                    enemy.lives--;
+                    projectile.markForDeletion = true;
+                    if (enemy.lives <= 0) {
+                        enemy.markedForDeletion = true;
+                        this.score += enemy.score;
+                    }
+                }
+            });
         });
         this.enemies = this.enemies.filter((enemy) => !enemy.markedForDeletion);
 
@@ -71,5 +91,14 @@ export class Game {
 
     addEnemy() {
         this.enemies.push(new Angler1(this));
+    }
+
+    checkCollision(rect1: Rect, rect2: Rect) {
+        return (
+            rect1.x < rect2.x + rect2.width && //
+            rect1.x + rect1.width > rect2.x &&
+            rect1.y < rect2.y + rect2.height &&
+            rect1.y + rect1.height > rect2.y
+        );
     }
 }
