@@ -21,7 +21,7 @@ export class Projectile {
 
     update() {
         this.x += this.speed;
-        if (this.x > this.game.width + 0.8) this.markForDeletion = true;
+        if (this.x > this.game.width) this.markForDeletion = true;
     }
 
     draw(context: CanvasRenderingContext2D) {

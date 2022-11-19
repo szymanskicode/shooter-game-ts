@@ -3,12 +3,14 @@ import { Player } from './Player';
 import { UI } from './UI';
 import { Angler1, Enemy } from './Enemy';
 import { Projectile } from './Projectile';
+import { Background } from './Background';
 
 type Rect = Player | Enemy | Projectile;
 
 export class Game {
     width: number;
     height: number;
+    background: Background;
     player: Player;
     input: InputHandler;
     ui: UI;
@@ -21,11 +23,16 @@ export class Game {
     ammoTimer: number;
     ammoInterval: number;
     score: number;
+    winningScore: number;
     gameOver: boolean;
+    gameTime: number;
+    timeLimit: number;
+    speed: number;
 
     constructor(width: number, height: number) {
         this.width = width;
         this.height = height;
+        this.background = new Background(this);
         this.player = new Player(this);
         this.input = new InputHandler(this);
         this.ui = new UI(this);
@@ -38,10 +45,19 @@ export class Game {
         this.ammoTimer = 0;
         this.ammoInterval = 500;
         this.score = 0;
+        this.winningScore = 10;
         this.gameOver = false;
+        this.gameTime = 0;
+        this.timeLimit = 5000;
+        this.speed = 1;
     }
 
     update(deltaTime: number) {
+        if (!this.gameOver) this.gameTime += deltaTime;
+        if (this.gameTime > this.timeLimit) this.gameOver = true;
+
+        this.background.update();
+        this.background.layer4.update();
         this.player.update();
 
         // refill ammo
@@ -65,7 +81,8 @@ export class Game {
                     projectile.markForDeletion = true;
                     if (enemy.lives <= 0) {
                         enemy.markedForDeletion = true;
-                        this.score += enemy.score;
+                        if (!this.gameOver) this.score += enemy.score;
+                        if (this.score > this.winningScore) this.gameOver = true;
                     }
                 }
             });
@@ -82,11 +99,13 @@ export class Game {
     }
 
     draw(context: CanvasRenderingContext2D) {
+        this.background.draw(context);
         this.player.draw(context);
         this.ui.draw(context);
         this.enemies.forEach((enemy) => {
             enemy.draw(context);
         });
+        this.background.layer4.draw(context);
     }
 
     addEnemy() {
