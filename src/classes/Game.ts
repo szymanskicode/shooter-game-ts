@@ -4,6 +4,7 @@ import { UI } from './UI';
 import { Angler1, Angler2, Enemy, LuckyFish } from './Enemy';
 import { Projectile } from './Projectile';
 import { Background } from './Background';
+import { Particle } from './Particle';
 
 type Rect = Player | Enemy | Projectile;
 
@@ -16,6 +17,7 @@ export class Game {
     ui: UI;
     keys: string[];
     enemies: Enemy[];
+    particles: Particle[];
     enemyTimer: number;
     enemyInterval: number;
     ammo: number;
@@ -39,6 +41,7 @@ export class Game {
         this.ui = new UI(this);
         this.keys = [];
         this.enemies = [];
+        this.particles = [];
         this.enemyTimer = 0;
         this.enemyInterval = 1000;
         this.ammo = 20;
@@ -70,12 +73,22 @@ export class Game {
             this.ammoTimer += deltaTime;
         }
 
+        // particles
+        this.particles.forEach((particle) => particle.update());
+        this.particles = this.particles.filter((particle) => !particle.markForDeletion);
+
         this.enemies.forEach((enemy) => {
             enemy.update();
 
             // collisions
             if (this.checkCollision(this.player, enemy)) {
                 enemy.markedForDeletion = true;
+
+                // create particles on enemy destroy
+                for (let i = 0; i < 10; i++) {
+                    this.particles.push(new Particle(this, enemy.x + enemy.width * 0.5, enemy.y + enemy.height * 0.5));
+                }
+
                 if (enemy.type === 'lucky') this.player.enterPowerUp();
                 else this.score--;
             }
@@ -83,8 +96,18 @@ export class Game {
                 if (this.checkCollision(projectile, enemy)) {
                     enemy.lives--;
                     projectile.markForDeletion = true;
+
+                    // create particle when hit
+                    this.particles.push(new Particle(this, enemy.x + enemy.width * 0.5, enemy.y + enemy.height * 0.5));
+
                     if (enemy.lives <= 0) {
                         enemy.markedForDeletion = true;
+
+                        // create particles on enemy destroy
+                        for (let i = 0; i < 10; i++) {
+                            this.particles.push(new Particle(this, enemy.x + enemy.width * 0.5, enemy.y + enemy.height * 0.5));
+                        }
+
                         if (!this.gameOver) this.score += enemy.score;
                         if (this.score > this.winningScore) this.gameOver = true;
                     }
@@ -106,6 +129,7 @@ export class Game {
         this.background.draw(context);
         this.player.draw(context);
         this.ui.draw(context);
+        this.particles.forEach((particle) => particle.draw(context));
         this.enemies.forEach((enemy) => {
             enemy.draw(context);
         });
