@@ -9,7 +9,7 @@ export class UI {
     constructor(game: Game) {
         this.game = game;
         this.fontSize = 25;
-        this.fontFamily = 'Helvetica';
+        this.fontFamily = 'Bangers';
         this.color = 'white';
     }
 
@@ -24,16 +24,11 @@ export class UI {
         // score
         context.fillText('Score: ' + this.game.score, 20, 40);
 
-        // ammo
-        for (let i = 0; i < this.game.ammo; i++) {
-            context.fillRect(20 + 5 * i, 50, 3, 20);
-        }
-
         // timer
         const formatedTime = (this.game.gameTime * 0.001).toFixed(1);
         context.fillText('Timer: ' + formatedTime, 20, 100);
 
-        // game
+        // game over message
         if (this.game.gameOver) {
             context.textAlign = 'center';
             let message1: string;
@@ -47,10 +42,16 @@ export class UI {
                 message2 = 'Try again next time!';
             }
 
-            context.font = '50px ' + this.fontFamily;
-            context.fillText(message1, this.game.width * 0.5, this.game.height * 0.5 - 40);
-            context.font = '20px ' + this.fontFamily;
-            context.fillText(message2, this.game.width * 0.5, this.game.height * 0.5 + 40);
+            context.font = '70px ' + this.fontFamily;
+            context.fillText(message1, this.game.width * 0.5, this.game.height * 0.5 - 20);
+            context.font = '25px ' + this.fontFamily;
+            context.fillText(message2, this.game.width * 0.5, this.game.height * 0.5 + 20);
+        }
+
+        // ammo
+        if (this.game.player.powerUp) context.fillStyle = '#ffffbd';
+        for (let i = 0; i < this.game.ammo; i++) {
+            context.fillRect(20 + 5 * i, 50, 3, 20);
         }
 
         context.restore();

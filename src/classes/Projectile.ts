@@ -8,6 +8,7 @@ export class Projectile {
     height: number;
     speed: number;
     markForDeletion: boolean;
+    image: HTMLImageElement;
 
     constructor(game: Game, x: number, y: number) {
         this.game = game;
@@ -17,6 +18,7 @@ export class Projectile {
         this.height = 3;
         this.speed = 3;
         this.markForDeletion = false;
+        this.image = document.getElementById('projectile') as HTMLImageElement;
     }
 
     update() {
@@ -25,7 +27,6 @@ export class Projectile {
     }
 
     draw(context: CanvasRenderingContext2D) {
-        context.fillStyle = 'yellow';
-        context.fillRect(this.x, this.y, this.width, this.height);
+        context.drawImage(this.image, this.x, this.y);
     }
 }

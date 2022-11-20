@@ -1,7 +1,7 @@
 import { InputHandler } from './InputHandler';
 import { Player } from './Player';
 import { UI } from './UI';
-import { Angler1, Enemy } from './Enemy';
+import { Angler1, Angler2, Enemy, LuckyFish } from './Enemy';
 import { Projectile } from './Projectile';
 import { Background } from './Background';
 
@@ -49,9 +49,9 @@ export class Game {
         this.winningScore = 10;
         this.gameOver = false;
         this.gameTime = 0;
-        this.timeLimit = 5000;
+        this.timeLimit = 30000;
         this.speed = 1;
-        this.debug = true;
+        this.debug = false;
     }
 
     update(deltaTime: number) {
@@ -60,7 +60,7 @@ export class Game {
 
         this.background.update();
         this.background.layer4.update();
-        this.player.update();
+        this.player.update(deltaTime);
 
         // refill ammo
         if (this.ammoTimer > this.ammoInterval) {
@@ -76,6 +76,8 @@ export class Game {
             // collisions
             if (this.checkCollision(this.player, enemy)) {
                 enemy.markedForDeletion = true;
+                if (enemy.type === 'lucky') this.player.enterPowerUp();
+                else this.score--;
             }
             this.player.projectiles.forEach((projectile) => {
                 if (this.checkCollision(projectile, enemy)) {
@@ -111,7 +113,10 @@ export class Game {
     }
 
     addEnemy() {
-        this.enemies.push(new Angler1(this));
+        const randomize = Math.random();
+        if (randomize < 0.3) this.enemies.push(new Angler1(this));
+        else if (randomize < 0.6) this.enemies.push(new Angler2(this));
+        else this.enemies.push(new LuckyFish(this));
     }
 
     checkCollision(rect1: Rect, rect2: Rect) {

@@ -14,14 +14,13 @@ export class Enemy {
     score: number;
     maxFrame: number;
     image: HTMLImageElement;
+    type: string;
 
     constructor(game: Game) {
         this.game = game;
         this.x = this.game.width;
         this.speedX = Math.random() * -1.5 - 0.5;
         this.markedForDeletion = false;
-        this.lives = 5;
-        this.score = this.lives;
         this.frameX = 0;
         this.frameY = 0;
         this.maxFrame = 37;
@@ -40,7 +39,11 @@ export class Enemy {
     }
 
     draw(context: CanvasRenderingContext2D) {
-        if (this.game.debug) context.strokeRect(this.x, this.y, this.width, this.height);
+        if (this.game.debug) {
+            context.strokeRect(this.x, this.y, this.width, this.height);
+            context.font = '20px Halvetica';
+            context.fillText(this.lives.toString(), this.x, this.y);
+        }
         context.drawImage(
             this.image, //
             this.frameX * this.width,
@@ -52,14 +55,10 @@ export class Enemy {
             this.width,
             this.height
         );
-        context.font = '20px Halvetica';
-        context.fillText(this.lives.toString(), this.x, this.y);
     }
 }
 
 export class Angler1 extends Enemy {
-    game: Game;
-
     constructor(game: Game) {
         super(game);
         this.width = 228;
@@ -67,5 +66,34 @@ export class Angler1 extends Enemy {
         this.y = Math.random() * (this.game.height * 0.9 - this.height);
         this.image = document.getElementById('angler1') as HTMLImageElement;
         this.frameY = Math.floor(Math.random() * 3);
+        this.lives = 2;
+        this.score = this.lives;
+    }
+}
+
+export class Angler2 extends Enemy {
+    constructor(game: Game) {
+        super(game);
+        this.width = 213;
+        this.height = 165;
+        this.y = Math.random() * (this.game.height * 0.9 - this.height);
+        this.image = document.getElementById('angler2') as HTMLImageElement;
+        this.frameY = Math.floor(Math.random() * 2);
+        this.lives = 3;
+        this.score = this.lives;
+    }
+}
+
+export class LuckyFish extends Enemy {
+    constructor(game: Game) {
+        super(game);
+        this.width = 99;
+        this.height = 95;
+        this.y = Math.random() * (this.game.height * 0.9 - this.height);
+        this.image = document.getElementById('lucky') as HTMLImageElement;
+        this.frameY = Math.floor(Math.random() * 2);
+        this.lives = 3;
+        this.score = 15;
+        this.type = 'lucky';
     }
 }
