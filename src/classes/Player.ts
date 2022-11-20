@@ -65,6 +65,7 @@ export class Player {
                 this.powerUpTimer = 0;
                 this.powerUp = false;
                 this.frameY = 0;
+                if (this.game.ammo > this.game.maxAmmo) this.game.ammo = this.game.maxAmmo;
             } else {
                 this.powerUpTimer += deltaTime;
                 this.frameY = 1;
@@ -108,6 +109,6 @@ export class Player {
     enterPowerUp() {
         this.powerUpTimer = 0;
         this.powerUp = true;
-        this.game.ammo = this.game.maxAmmo;
+        if (this.game.ammo < this.game.maxAmmo) this.game.ammo = this.game.maxAmmo;
     }
 }
