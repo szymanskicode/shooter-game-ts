@@ -20,7 +20,12 @@ export class Explosion {
         this.game = game;
         this.frameX = 0;
         this.spriteHeight = 200;
-        this.fps = 15;
+        this.spriteWidth = 200;
+        this.width = this.spriteWidth;
+        this.height = this.spriteHeight;
+        this.x = x - this.width * 0.5;
+        this.y = y - this.height * 0.5;
+        this.fps = 30;
         this.timer = 0;
         this.interval = 1000 / this.fps;
         this.markedForDeletion = false;
@@ -28,6 +33,7 @@ export class Explosion {
     }
 
     update(deltaTime: number) {
+        this.x -= this.game.speed;
         if (this.timer > this.interval) {
             this.frameX++;
             this.timer = 0;
@@ -54,12 +60,19 @@ export class SmokeExpolsion extends Explosion {
     constructor(game: Game, x: number, y: number) {
         super(game, x, y);
         this.image = document.getElementById('smokeExplosion') as HTMLImageElement;
-        this.spriteWidth = 200;
-        this.width = this.spriteWidth;
-        this.height = this.spriteHeight;
-        this.x = x - this.width * 0.5;
-        this.y = y - this.height * 0.5;
     }
 }
 
-export class FireExpolsion extends Explosion {}
+export class FireExpolsion extends Explosion {
+    game: Game;
+    x: number;
+    y: number;
+    spriteWidth: number;
+    width: number;
+    height: number;
+
+    constructor(game: Game, x: number, y: number) {
+        super(game, x, y);
+        this.image = document.getElementById('fireExplosion') as HTMLImageElement;
+    }
+}

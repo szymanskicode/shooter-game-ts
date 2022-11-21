@@ -66,7 +66,7 @@ export class Angler1 extends Enemy {
         this.y = Math.random() * (this.game.height * 0.9 - this.height);
         this.image = document.getElementById('angler1') as HTMLImageElement;
         this.frameY = Math.floor(Math.random() * 3);
-        this.lives = 2;
+        this.lives = 5;
         this.score = this.lives;
     }
 }
@@ -79,7 +79,7 @@ export class Angler2 extends Enemy {
         this.y = Math.random() * (this.game.height * 0.95 - this.height);
         this.image = document.getElementById('angler2') as HTMLImageElement;
         this.frameY = Math.floor(Math.random() * 2);
-        this.lives = 3;
+        this.lives = 6;
         this.score = this.lives;
     }
 }
@@ -92,7 +92,7 @@ export class LuckyFish extends Enemy {
         this.y = Math.random() * (this.game.height * 0.95 - this.height);
         this.image = document.getElementById('lucky') as HTMLImageElement;
         this.frameY = Math.floor(Math.random() * 2);
-        this.lives = 3;
+        this.lives = 5;
         this.score = 15;
         this.type = 'lucky';
     }
@@ -106,8 +106,8 @@ export class HiveWhale extends Enemy {
         this.y = Math.random() * (this.game.height * 0.95 - this.height);
         this.image = document.getElementById('hivewhale') as HTMLImageElement;
         this.frameY = 0;
-        this.lives = 15;
-        this.score = this.lives;
+        this.lives = 20;
+        this.score = 10;
         this.type = 'hive';
         this.speedX = Math.random() * -1.2 - 0.2;
     }

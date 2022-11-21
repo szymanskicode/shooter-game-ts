@@ -39,7 +39,7 @@ export class UI {
                 message2 = 'Well done!';
             } else {
                 message1 = 'GAME OVER!';
-                message2 = 'Try again next time!';
+                message2 = '30s was not enough to score 80pts, try again!';
             }
 
             context.font = '70px ' + this.fontFamily;

@@ -5,7 +5,7 @@ import { Angler1, Angler2, Drone, Enemy, HiveWhale, LuckyFish } from './Enemy';
 import { Projectile } from './Projectile';
 import { Background } from './Background';
 import { Particle } from './Particle';
-import { Explosion, SmokeExpolsion } from './Explosion';
+import { Explosion, FireExpolsion, SmokeExpolsion } from './Explosion';
 
 type Rect = Player | Enemy | Projectile;
 
@@ -46,13 +46,13 @@ export class Game {
         this.particles = [];
         this.explosions = [];
         this.enemyTimer = 0;
-        this.enemyInterval = 1000;
+        this.enemyInterval = 2000;
         this.ammo = 20;
         this.maxAmmo = 50;
         this.ammoTimer = 0;
-        this.ammoInterval = 500;
+        this.ammoInterval = 350;
         this.score = 0;
-        this.winningScore = 10;
+        this.winningScore = 80;
         this.gameOver = false;
         this.gameTime = 0;
         this.timeLimit = 30000;
@@ -96,7 +96,7 @@ export class Game {
                 }
 
                 if (enemy.type === 'lucky') this.player.enterPowerUp();
-                else this.score--;
+                else if (!this.gameOver) this.score--;
             }
             this.player.projectiles.forEach((projectile) => {
                 if (this.checkCollision(projectile, enemy)) {
@@ -122,7 +122,7 @@ export class Game {
                         }
 
                         if (!this.gameOver) this.score += enemy.score;
-                        if (this.score > this.winningScore) this.gameOver = true;
+                        // if (this.score > this.winningScore) this.gameOver = true;
                     }
                 }
             });
@@ -154,13 +154,14 @@ export class Game {
         const randomize = Math.random();
         if (randomize < 0.3) this.enemies.push(new Angler1(this));
         else if (randomize < 0.6) this.enemies.push(new Angler2(this));
-        else if (randomize < 0.8) this.enemies.push(new HiveWhale(this));
+        else if (randomize < 0.7) this.enemies.push(new HiveWhale(this));
         else this.enemies.push(new LuckyFish(this));
     }
 
     addExplosion(enemy: Enemy) {
         const randomize = Math.random();
-        if (randomize < 1) this.explosions.push(new SmokeExpolsion(this, enemy.x, enemy.y));
+        if (randomize < 0.5) this.explosions.push(new SmokeExpolsion(this, enemy.x + enemy.width * 0.5, enemy.y + enemy.height * 0.5));
+        else this.explosions.push(new FireExpolsion(this, enemy.x + enemy.width * 0.5, enemy.y + enemy.height * 0.5));
     }
 
     checkCollision(rect1: Rect, rect2: Rect) {
