@@ -5,7 +5,7 @@ import { Angler1, Angler2, Drone, Enemy, HiveWhale, LuckyFish } from './Enemy';
 import { Projectile } from './Projectile';
 import { Background } from './Background';
 import { Particle } from './Particle';
-import { Explosion } from './Explosion';
+import { Explosion, SmokeExpolsion } from './Explosion';
 
 type Rect = Player | Enemy | Projectile;
 
@@ -44,6 +44,7 @@ export class Game {
         this.keys = [];
         this.enemies = [];
         this.particles = [];
+        this.explosions = [];
         this.enemyTimer = 0;
         this.enemyInterval = 1000;
         this.ammo = 20;
@@ -87,6 +88,7 @@ export class Game {
             // collisions
             if (this.checkCollision(this.player, enemy)) {
                 enemy.markedForDeletion = true;
+                this.addExplosion(enemy);
 
                 // create particles on enemy destroy
                 for (let i = 0; i < enemy.score; i++) {
@@ -106,6 +108,7 @@ export class Game {
 
                     if (enemy.lives <= 0) {
                         enemy.markedForDeletion = true;
+                        this.addExplosion(enemy);
 
                         if (enemy.type === 'hive') {
                             for (let i = 0; i < 5; i++) {
@@ -153,6 +156,11 @@ export class Game {
         else if (randomize < 0.6) this.enemies.push(new Angler2(this));
         else if (randomize < 0.8) this.enemies.push(new HiveWhale(this));
         else this.enemies.push(new LuckyFish(this));
+    }
+
+    addExplosion(enemy: Enemy) {
+        const randomize = Math.random();
+        if (randomize < 1) this.explosions.push(new SmokeExpolsion(this, enemy.x, enemy.y));
     }
 
     checkCollision(rect1: Rect, rect2: Rect) {
