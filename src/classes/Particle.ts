@@ -13,7 +13,7 @@ export class Particle {
     speedX: number;
     speedY: number;
     gravity: number;
-    markForDeletion: boolean;
+    markedForDeletion: boolean;
     angle: number;
     va: number;
     bounced: number;
@@ -32,7 +32,7 @@ export class Particle {
         this.speedX = Math.random() * 6 - 3;
         this.speedY = Math.random() * -15;
         this.gravity = 0.5;
-        this.markForDeletion = false;
+        this.markedForDeletion = false;
         this.angle = 0;
         this.va = Math.random() * 0.2 - 0.1;
         this.bounced = 0;
@@ -44,7 +44,7 @@ export class Particle {
         this.speedY += this.gravity;
         this.x -= this.speedX + this.game.speed;
         this.y += this.speedY;
-        if (this.y > this.game.height + this.size || this.x < 0 - this.size) this.markForDeletion = true;
+        if (this.y > this.game.height + this.size || this.x < 0 - this.size) this.markedForDeletion = true;
 
         if (this.y > this.game.height - this.bottomBounceBoundary && this.bounced < 2) {
             this.bounced++;

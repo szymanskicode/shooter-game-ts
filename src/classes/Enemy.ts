@@ -76,7 +76,7 @@ export class Angler2 extends Enemy {
         super(game);
         this.width = 213;
         this.height = 165;
-        this.y = Math.random() * (this.game.height * 0.9 - this.height);
+        this.y = Math.random() * (this.game.height * 0.95 - this.height);
         this.image = document.getElementById('angler2') as HTMLImageElement;
         this.frameY = Math.floor(Math.random() * 2);
         this.lives = 3;
@@ -89,11 +89,42 @@ export class LuckyFish extends Enemy {
         super(game);
         this.width = 99;
         this.height = 95;
-        this.y = Math.random() * (this.game.height * 0.9 - this.height);
+        this.y = Math.random() * (this.game.height * 0.95 - this.height);
         this.image = document.getElementById('lucky') as HTMLImageElement;
         this.frameY = Math.floor(Math.random() * 2);
         this.lives = 3;
         this.score = 15;
         this.type = 'lucky';
+    }
+}
+
+export class HiveWhale extends Enemy {
+    constructor(game: Game) {
+        super(game);
+        this.width = 400;
+        this.height = 227;
+        this.y = Math.random() * (this.game.height * 0.95 - this.height);
+        this.image = document.getElementById('hivewhale') as HTMLImageElement;
+        this.frameY = 0;
+        this.lives = 15;
+        this.score = this.lives;
+        this.type = 'hive';
+        this.speedX = Math.random() * -1.2 - 0.2;
+    }
+}
+
+export class Drone extends Enemy {
+    constructor(game: Game, x: number, y: number) {
+        super(game);
+        this.width = 115;
+        this.height = 95;
+        this.x = x;
+        this.y = y;
+        this.image = document.getElementById('drone') as HTMLImageElement;
+        this.frameY = Math.floor(Math.random() * 2);
+        this.lives = 3;
+        this.score = this.lives;
+        this.type = 'drone';
+        this.speedX = Math.random() * -4.2 - 0.5;
     }
 }

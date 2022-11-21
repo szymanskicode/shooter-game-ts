@@ -1,10 +1,11 @@
 import { InputHandler } from './InputHandler';
 import { Player } from './Player';
 import { UI } from './UI';
-import { Angler1, Angler2, Enemy, LuckyFish } from './Enemy';
+import { Angler1, Angler2, Drone, Enemy, HiveWhale, LuckyFish } from './Enemy';
 import { Projectile } from './Projectile';
 import { Background } from './Background';
 import { Particle } from './Particle';
+import { Explosion } from './Explosion';
 
 type Rect = Player | Enemy | Projectile;
 
@@ -18,6 +19,7 @@ export class Game {
     keys: string[];
     enemies: Enemy[];
     particles: Particle[];
+    explosions: Explosion[];
     enemyTimer: number;
     enemyInterval: number;
     ammo: number;
@@ -74,8 +76,10 @@ export class Game {
         }
 
         // particles
+        this.explosions.forEach((explosion) => explosion.update(deltaTime));
+        this.explosions = this.explosions.filter((explosion) => !explosion.markedForDeletion);
         this.particles.forEach((particle) => particle.update());
-        this.particles = this.particles.filter((particle) => !particle.markForDeletion);
+        this.particles = this.particles.filter((particle) => !particle.markedForDeletion);
 
         this.enemies.forEach((enemy) => {
             enemy.update();
@@ -85,7 +89,7 @@ export class Game {
                 enemy.markedForDeletion = true;
 
                 // create particles on enemy destroy
-                for (let i = 0; i < 10; i++) {
+                for (let i = 0; i < enemy.score; i++) {
                     this.particles.push(new Particle(this, enemy.x + enemy.width * 0.5, enemy.y + enemy.height * 0.5));
                 }
 
@@ -95,7 +99,7 @@ export class Game {
             this.player.projectiles.forEach((projectile) => {
                 if (this.checkCollision(projectile, enemy)) {
                     enemy.lives--;
-                    projectile.markForDeletion = true;
+                    projectile.markedForDeletion = true;
 
                     // create particle when hit
                     this.particles.push(new Particle(this, enemy.x + enemy.width * 0.5, enemy.y + enemy.height * 0.5));
@@ -103,8 +107,14 @@ export class Game {
                     if (enemy.lives <= 0) {
                         enemy.markedForDeletion = true;
 
+                        if (enemy.type === 'hive') {
+                            for (let i = 0; i < 5; i++) {
+                                this.enemies.push(new Drone(this, enemy.x + Math.random() * enemy.width, enemy.y + Math.random() * enemy.height * 0.5));
+                            }
+                        }
+
                         // create particles on enemy destroy
-                        for (let i = 0; i < 10; i++) {
+                        for (let i = 0; i < enemy.score; i++) {
                             this.particles.push(new Particle(this, enemy.x + enemy.width * 0.5, enemy.y + enemy.height * 0.5));
                         }
 
@@ -133,6 +143,7 @@ export class Game {
         this.enemies.forEach((enemy) => {
             enemy.draw(context);
         });
+        this.explosions.forEach((explosion) => explosion.draw(context));
         this.background.layer4.draw(context);
     }
 
@@ -140,6 +151,7 @@ export class Game {
         const randomize = Math.random();
         if (randomize < 0.3) this.enemies.push(new Angler1(this));
         else if (randomize < 0.6) this.enemies.push(new Angler2(this));
+        else if (randomize < 0.8) this.enemies.push(new HiveWhale(this));
         else this.enemies.push(new LuckyFish(this));
     }
 

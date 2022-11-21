@@ -7,7 +7,7 @@ export class Projectile {
     width: number;
     height: number;
     speed: number;
-    markForDeletion: boolean;
+    markedForDeletion: boolean;
     image: HTMLImageElement;
 
     constructor(game: Game, x: number, y: number) {
@@ -17,13 +17,13 @@ export class Projectile {
         this.width = 10;
         this.height = 3;
         this.speed = 3;
-        this.markForDeletion = false;
+        this.markedForDeletion = false;
         this.image = document.getElementById('projectile') as HTMLImageElement;
     }
 
     update() {
         this.x += this.speed;
-        if (this.x > this.game.width) this.markForDeletion = true;
+        if (this.x > this.game.width) this.markedForDeletion = true;
     }
 
     draw(context: CanvasRenderingContext2D) {
